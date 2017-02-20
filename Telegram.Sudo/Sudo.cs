@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using JWDB.Telegram.Base;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Args;
 
-namespace Telegram.Sudo
+namespace JWDB.Telegram.Sudo
 {
     public class Sudo : IJWDBTelegramHandler
     {
@@ -22,7 +23,7 @@ namespace Telegram.Sudo
          
         }
 
-        private static async void Bot_OnMessageAsync(object sender, Bot.Args.MessageEventArgs e)
+        private static async void Bot_OnMessageAsync(object sender, MessageEventArgs e)
         {
             try
             {
@@ -34,7 +35,6 @@ namespace Telegram.Sudo
 
                 if (message.Type == MessageType.TextMessage)
                 {
-                    Console.WriteLine("Got Text Message");
                     if (message.Text.StartsWith("/sudo"))
                     {
                         if (message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
@@ -54,29 +54,8 @@ namespace Telegram.Sudo
                                 });
                         }
                     }
-                    else if (message.Text.StartsWith("/join"))
-                    {
-                        System.IO.File.AppendAllText(filename, message.From.Id + Environment.NewLine);
-
-                    }
-
                 }
-                else if (message.Type == MessageType.ServiceMessage)
-                {
-                    if (message.NewChatMember != null)
-                    {
-                        System.IO.File.AppendAllText(filename, message.NewChatMember.Id + Environment.NewLine);
-                    }
-                    else if (message.LeftChatMember != null)
-                    {
-
-                        List<string> usersLeft = System.IO.File.ReadAllLines(filename).ToList();
-                        usersLeft.Remove(message.LeftChatMember.Id.ToString());
-                        System.IO.File.Delete(filename);
-                        System.IO.File.WriteAllLines(filename, usersLeft.ToArray());
-
-                    }
-                }
+               
 
             }
             catch (Exception ex)

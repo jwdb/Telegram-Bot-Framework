@@ -1,0 +1,12 @@
+{0} was just murdered by The hitman, using BFG
+{0} died, by The hitman's Sniper shotgun
+The hitman killed {0} wielding a huge katana
+You think it was The hitman who killed {0}? Nope, Chuck Testa
+It was a bitter end for {0}, but The hitman won victoriously
+Embarrassingly, {0} died of fright before The hitman could even raise his weapon
+The hitman struck the mighty blow and ended {0}
+{0} never saw The hitman coming
+The hitman delivered the fatal blow on {0}
+{0}'s inventory now belongs to The hitman
+The hitman taught {0} the true meaning of PVP
+What is this, like death number ten for {0}? Ask The hitman

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9519D648-AB15-492E-9D78-83C2415D28A1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Telegram.Sudo</RootNamespace>
-    <AssemblyName>Telegram.Sudo</AssemblyName>
+    <RootNamespace>JWDB.Telegram.Sudo</RootNamespace>
+    <AssemblyName>JWDB.Telegram.Sudo</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

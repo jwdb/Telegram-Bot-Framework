@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telegram.Sudo", "Telegram.Sudo\Telegram.Sudo.csproj", "{9519D648-AB15-492E-9D78-83C2415D28A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWDB.Telegram.Sudo", "Telegram.Sudo\JWDB.Telegram.Sudo.csproj", "{9519D648-AB15-492E-9D78-83C2415D28A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWDB.Telegram.Base", "Telegram.Base\JWDB.Telegram.Base.csproj", "{E9AF8806-970C-4ADA-910C-E5BADD5B1E5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWDB.Telegram.Join", "JWDB.Telegram.Join\JWDB.Telegram.Join.csproj", "{6E655BEF-BF24-48B8-A11F-CB27D5820BFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWDB.Telegram.Hitman", "JWDB.Telegram.Hitman\JWDB.Telegram.Hitman.csproj", "{29F29220-D749-4BD3-ACEC-D65415B995F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{E9AF8806-970C-4ADA-910C-E5BADD5B1E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9AF8806-970C-4ADA-910C-E5BADD5B1E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9AF8806-970C-4ADA-910C-E5BADD5B1E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E655BEF-BF24-48B8-A11F-CB27D5820BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E655BEF-BF24-48B8-A11F-CB27D5820BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E655BEF-BF24-48B8-A11F-CB27D5820BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E655BEF-BF24-48B8-A11F-CB27D5820BFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F29220-D749-4BD3-ACEC-D65415B995F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F29220-D749-4BD3-ACEC-D65415B995F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F29220-D749-4BD3-ACEC-D65415B995F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F29220-D749-4BD3-ACEC-D65415B995F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
