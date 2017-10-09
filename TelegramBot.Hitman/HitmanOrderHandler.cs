@@ -1,37 +1,38 @@
-﻿using JWDB.Telegram.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
+using TelegramBot.Base;
 
-namespace JWDB.Telegram.Hitman
+namespace TelegramBot.Hitman
 {
-    public class HitmanOrderHandler : IJWDBTelegramHandler
+    public class HitmanOrderHandler : ITelegramBotHandler
     {
-        static Random rnd = new Random();
+        static readonly Random Rnd = new Random();
 
-        static Dictionary<long, int> currentTargets = new Dictionary<long, int>();
+        static Dictionary<long, int> _currentTargets = new Dictionary<long, int>();
 
-        static TelegramBotClient botClient = null;
+        static TelegramBotClient _botClient;
 
-        public void Init(global::Telegram.Bot.TelegramBotClient bot)
+        public void Init(TelegramBotClient bot, List<ITelegramBotHandler> handlers)
         {
-            botClient = bot;
+            _botClient = bot;
             bot.OnMessage += Bot_OnMessageAsync;
         }
 
-        public void Start(global::Telegram.Bot.TelegramBotClient bot)
+        public void Start(TelegramBotClient bot)
         {
+            bot.OnMessage += Bot_OnMessageAsync;
         }
 
         public void Stop()
         {
-            currentTargets.ToList().ForEach(x => botClient.SendTextMessageAsync(x.Key, $"The hitman went away..."));
-            currentTargets = new Dictionary<long, int>();
+            _botClient.OnMessage -= Bot_OnMessageAsync;
+            _currentTargets.ToList().ForEach(x => _botClient.SendTextMessageAsync(x.Key, $"The hitman went away..."));
+            _currentTargets = new Dictionary<long, int>();
         }
 
         private static async void Bot_OnMessageAsync(object sender, MessageEventArgs e)
@@ -44,21 +45,21 @@ namespace JWDB.Telegram.Hitman
 
                 if (message.Type == MessageType.TextMessage)
                 {
-                    if (currentTargets.ContainsKey(message.Chat.Id) && message.Text.StartsWith("/call911") && message.From.Id == currentTargets[message.Chat.Id])
+                    if (_currentTargets.ContainsKey(message.Chat.Id) && message.Text.StartsWith("/call911") && message.From.Id == _currentTargets[message.Chat.Id])
                     {
                         if (message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
                         {
-                            currentTargets.Remove(message.Chat.Id);
-                            await botClient.SendTextMessageAsync(message.Chat.Id, $"911 has been called, the hitman will search for a new target...");
+                            _currentTargets.Remove(message.Chat.Id);
+                            await _botClient.SendTextMessageAsync(message.Chat.Id, "911 has been called, the hitman will search for a new target...");
 
                             await DetermineNewTarget(message.Chat.Id);
                         }
                     }
-                    else if (!currentTargets.ContainsKey(message.Chat.Id) && message.Text.StartsWith("/orderAHitman"))
+                    else if (!_currentTargets.ContainsKey(message.Chat.Id) && message.Text.StartsWith("/orderAHitman"))
                     {
                         if (message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
                         {
-                            await botClient.SendTextMessageAsync(message.Chat.Id, $"911 has been called, the hitman will search for a new target...");
+                            await _botClient.SendTextMessageAsync(message.Chat.Id, "911 has been called, the hitman will search for a new target...");
 
                             await DetermineNewTarget(message.Chat.Id, message.From.Id);
                         }
@@ -76,9 +77,9 @@ namespace JWDB.Telegram.Hitman
             try
             {
 
-                int targetWas = currentTargets[chatId];
+                int targetWas = _currentTargets[chatId];
 
-                var getnameTask = botClient.GetChatMemberAsync(chatId, targetWas);
+                var getnameTask = _botClient.GetChatMemberAsync(chatId, targetWas);
 
                 getnameTask.Start();
 
@@ -86,25 +87,25 @@ namespace JWDB.Telegram.Hitman
 
                 var name = string.IsNullOrWhiteSpace(getnameTask.Result.User.Username) ? getnameTask.Result.User.FirstName : getnameTask.Result.User.Username;
 
-                string filename = $"deathmessages.txt";
+                var filename = "deathmessages.txt";
 
                 List<string> dmesgs = System.IO.File.ReadAllLines(filename).Distinct().ToList();
 
-                int r = rnd.Next(dmesgs.Count);
+                int r = Rnd.Next(dmesgs.Count);
 
                 var message = dmesgs[r];
 
                 if (message.Contains("{0}"))
                     message = string.Format("{0}", name);
 
-                await botClient.SendTextMessageAsync(chatId, message);
+                await _botClient.SendTextMessageAsync(chatId, message);
 
-                currentTargets.Remove(chatId);
+                _currentTargets.Remove(chatId);
 
                 await DetermineNewTarget(chatId, targetWas);
 
             }
-            catch (Exception)
+            catch
             {
             }
         }
@@ -116,19 +117,19 @@ namespace JWDB.Telegram.Hitman
 
             List<string> currentUsers = System.IO.File.ReadAllLines(filename).Distinct().ToList();
 
-            int r = rnd.Next(currentUsers.Count);
+            int r = Rnd.Next(currentUsers.Count);
 
             while (excludeId != 0 && excludeId == r)
-                r = rnd.Next(currentUsers.Count);
+                r = Rnd.Next(currentUsers.Count);
 
-            var user = currentUsers[r];
+            var user = currentUsers[r] ?? throw new ArgumentNullException("currentUsers[r]");
 
-            await botClient.GetChatMemberAsync(chatId, Convert.ToInt32(currentUsers[r])).ContinueWith(x =>
+            await _botClient.GetChatMemberAsync(chatId, Convert.ToInt32(user)).ContinueWith(x =>
             {
                 var targetName = string.IsNullOrWhiteSpace(x.Result.User.Username) ? x.Result.User.FirstName : x.Result.User.Username;
 
-                currentTargets.Add(chatId, x.Result.User.Id);
-                botClient.SendTextMessageAsync(chatId, $"The target is: @{targetName} call 911 before he kills you!");
+                _currentTargets.Add(chatId, x.Result.User.Id);
+                _botClient.SendTextMessageAsync(chatId, $"The target is: @{targetName} call 911 before he kills you!");
 
                 Task.Delay(new TimeSpan(1, 0, 0)).ContinueWith(y => OuttaTime(chatId));
             });

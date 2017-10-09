@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace JWDB.Telegram.Base
+namespace TelegramBot.Base
 {
-    public interface IJWDBTelegramHandler
+    public interface ITelegramBotHandler
     {
-        void Init(TelegramBotClient bot);
+        void Init(TelegramBotClient bot, List<ITelegramBotHandler> handlers);
 
         void Start(TelegramBotClient bot);
 

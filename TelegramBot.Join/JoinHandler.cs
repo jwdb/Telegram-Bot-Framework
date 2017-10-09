@@ -1,42 +1,40 @@
-﻿using JWDB.Telegram.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
+using TelegramBot.Base;
 
-namespace JWDB.Telegram.Join
+namespace TelegramBot.Join
 {
-    public class JoinHandler : IJWDBTelegramHandler
+    public class JoinHandler : ITelegramBotHandler
     {
-        static TelegramBotClient botClient = null;
+        static TelegramBotClient _botClient;
 
-        public void Init(global::Telegram.Bot.TelegramBotClient bot)
+        public void Init(TelegramBotClient bot, List<ITelegramBotHandler> handlers)
         {
-            botClient = bot;
+            _botClient = bot;
             bot.OnMessage += Bot_OnMessageAsync;
         }
 
-        public void Start(global::Telegram.Bot.TelegramBotClient bot)
+        public void Start(TelegramBotClient bot)
         {
+            bot.OnMessage += Bot_OnMessageAsync;
         }
 
         public void Stop()
         {
+            _botClient.OnMessage += Bot_OnMessageAsync;
         }
 
-        private static async void Bot_OnMessageAsync(object sender, MessageEventArgs e)
+        public static void Bot_OnMessageAsync(object sender, MessageEventArgs e)
         {
             try
             {
                 var message = e.Message;
 
                 string filename = $"users_{message.Chat.Id}.txt";
-
-                if (message == null) return;
 
                 if (message.Type == MessageType.TextMessage)
                 {
